@@ -1,2 +1,4 @@
 venv
 pf2015
+__pycache__
+*.pyc
