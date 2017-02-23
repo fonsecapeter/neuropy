@@ -1,5 +1,5 @@
 venv
-pf2015
 __pycache__
 *.pyc
-cannabis_sample_data
+sample_data
+

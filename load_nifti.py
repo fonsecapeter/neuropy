@@ -1,7 +1,7 @@
 # http://nipy.org/nibabel/nibabel_images.html
 import nibabel as nib
 
-img = nib.load('pf2015/t1.nii')
+img = nib.load('sample_data/pf2015/t1.nii')
 print('nifti shape:', img.shape)
 print('datatype:', img.header.get_data_dtype())
 print('voxel size:', img.header.get_zooms())
