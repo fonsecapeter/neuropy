@@ -13,6 +13,10 @@ class TFDataGroup(object):
     def length(self):
         return len(self.labels)
 
+    @property
+    def shape(self):
+        return (self.images.shape, self.labels.shape)
+
     def next_batch(self, batch_size):
         """Gets next batch of labelled data
 
@@ -23,7 +27,8 @@ class TFDataGroup(object):
         """
         batch_end = self.slide + batch_size
         if batch_end >= self.length:
-            raise IndexError('Batch out of range')
+            # raise IndexError('Batch out of range')
+            self.slide = 0
         images = self.images[self.slide:batch_end]
         labels = self.labels[self.slide:batch_end]
         self.slide += batch_size

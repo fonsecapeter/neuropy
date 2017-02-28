@@ -1,5 +1,7 @@
 venv
 __pycache__
 *.pyc
-sample_data
+sample_data/cannabis
+sample_data/ucla
+sample_data/pf2015
 

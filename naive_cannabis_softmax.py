@@ -1,5 +1,5 @@
 import tensorflow as tf
-from sample_data import cannabis
+from sample_data import load_cannabis
 
 # cannabis is all the data
 # maybe more data is called for :)
@@ -9,6 +9,7 @@ from sample_data import cannabis
 #
 # mnist.train.images are the mris flattened from
 # 256 * 256 * 170 = 11141120
+cannabis = load_cannabis(data_multiplier=5)
 
 x = tf.placeholder(tf.float32, [None, 11141120])
 
