@@ -1,5 +1,5 @@
 import numpy as np
-from tf_data import TFDataGroup, TFDataSet
+from tf_data import TFsMRIDataGroup, TFsMRIDataSet
 from unittest import TestCase
 
 images = np.array([
@@ -65,9 +65,9 @@ labels = np.array([
 ])
 
 
-class TestTFDataGroup(TestCase):
+class TestTFsMRIDataGroup(TestCase):
     def setUp(self):
-        self.data = TFDataGroup(images, labels)
+        self.data = TFsMRIDataGroup(images, labels)
 
     def test_images(self):
         assert np.array_equal(self.data.images, images)
@@ -76,13 +76,13 @@ class TestTFDataGroup(TestCase):
         assert np.array_equal(self.data.labels, labels)
 
 
-class TestTFDataSet(TestCase):
+class TestTFsMRIDataSet(TestCase):
     """Ensure train_test_split
 
     trust it works, but make sure it's used in a good enough way
     """
     def setUp(self):
-        self.dataset = TFDataSet(images, labels)
+        self.dataset = TFsMRIDataSet(images, labels)
         self.train_image_shape = self.dataset.train.images.shape
         self.train_label_shape = self.dataset.train.labels.shape
         self.validation_label_shape = self.dataset.validation.labels.shape

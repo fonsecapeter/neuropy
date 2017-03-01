@@ -1,5 +1,7 @@
 import tensorflow as tf
-from sample_data import load_cannabis
+from sample_data import cannabis
+
+BATCH_SIZE = 50
 
 # cannabis is all the data
 # maybe more data is called for :)
@@ -9,7 +11,7 @@ from sample_data import load_cannabis
 #
 # mnist.train.images are the mris flattened from
 # 256 * 256 * 170 = 11141120
-cannabis = load_cannabis(data_multiplier=5)
+cannabis.load_data(data_multiplier=5)
 
 x = tf.placeholder(tf.float32, [None, 11141120])
 
@@ -34,9 +36,9 @@ correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 tf.initialize_all_variables().run()
-# train 3 times
-for i in range(3):
-    batch_xs, batch_ys = cannabis.train.next_batch(50)
+# train 24 times
+for i in range(24):
+    batch_xs, batch_ys = cannabis.train.next_batch(BATCH_SIZE)
     train_accuracy = accuracy.eval(feed_dict={
         x: batch_xs, y_: batch_ys
     })
@@ -46,8 +48,3 @@ for i in range(3):
 # -------------------------------------------------------------------------------
 # display the accuracy
 print('test accuracy:', sess.run(accuracy, feed_dict={x: cannabis.test.images, y_: cannabis.test.labels}))
-# step 0, training accuracy: 0.58
-# step 1, training accuracy: 0.6
-# step 2, training accuracy: 0.46
-# test accuracy: 0.421053
-# just terrible
