@@ -1,7 +1,18 @@
 venv
 __pycache__
 *.pyc
-sample_data/cannabis
-sample_data/ucla
+
 sample_data/pf2015
 
+sample_data/cannabis/*
+!sample_data/cannabis/*.tsv
+!sample_data/cannabis/*.txt
+
+sample_data/ucla/*
+!sample_data/ucla/*.tsv
+!sample_data/ucla/*.txt
+
+
+sample_data/oasis/*
+!sample_data/oasis/*.tsv
+!sample_data/oasis/*.txt

@@ -1,0 +1,33 @@
+OASIS Data Usage Agreement (DUA)
+--------------------------------
+
+The Open Access Structural Imaging Series (OASIS) is a project
+dedicated to making brain imaging data openly available to the public.
+
+Using data available through the OASIS project requires agreeing with
+the following:
+
+    1. The quality and completeness of the data cannot be
+       guaranteed. Users employ these data at their own risk.
+
+    2. Users shall respect restrictions of access to sensitive
+       data. Users will make no attempt to identify the individuals whose
+       images are included in OASIS data sets.  Users must acknowledge
+       the use of OASIS data and data derived from OASIS data when
+       publicly presenting any findings or algorithms that benefited from
+       their use. Such presentations include but are not limited to
+       papers, books, book chapters, conference posters, and talks.
+
+    3. When publishing findings that benefit from OASIS data, please
+       include the following grant numbers in the acknowledgements
+       section and in the associated Pubmed Central submission: P50
+       AG05681, P01 AG03991, R01 AG021910, P20 MH071616, U24 RR021382.
+
+    4. Redistribution of original OASIS data is permitted so long as
+       the data are redistributed under the same terms and conditions are
+       described in this DUA.
+      
+    5. Data derived from original OASIS data may be distributed under
+       terms and conditions established by the creators of the
+       data. Users must comply with the terms and conditions of use set
+       by the creators of the data.

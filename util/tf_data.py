@@ -46,6 +46,7 @@ class TFsMRIDataSet(TFsMRIDataGroup):
         self.image_shape = image_shape
         self.pixel_depth = pixel_depth
         self.label_map = label_map
+        self.rev_label_map = {str(one_hot): label for label, one_hot in label_map.items()}
         self.data_multiplier = 1
         self.quiet = False
         self.images = None
@@ -59,7 +60,7 @@ class TFsMRIDataSet(TFsMRIDataGroup):
     def normalized(self, data):
         return (data - self.pixel_depth / 2) / self.pixel_depth
 
-    def load_or_save_image(self, p_id):
+    def load_or_save_image(self, p_id, p_class):
         if not os.path.exists(self.np_dir):
             os.makedirs(self.np_dir)
         try:
@@ -67,6 +68,7 @@ class TFsMRIDataSet(TFsMRIDataGroup):
         except FileNotFoundError:
             try:
                 img_file = nib.load(self.data_dir % (p_id, p_id))
+                # img_file = nib.load(self.data_dir % (p_class, p_id))
                 img_data = img_file.get_data()
                 if img_data.shape != self.image_shape:
                     return None
@@ -105,7 +107,7 @@ class TFsMRIDataSet(TFsMRIDataGroup):
                     p_id = participant[0]
                     p_class = participant[1]
                     for _ in range(self.data_multiplier):
-                        img = self.load_or_save_image(p_id)
+                        img = self.load_or_save_image(p_id, p_class)
                         if img is not None:
                             images.append(img)
                             labels.append(self.label_map[p_class])
@@ -126,11 +128,27 @@ class TFsMRIDataSet(TFsMRIDataGroup):
         for idx in range(count):
             img = fig.add_subplot(1, count, idx + 1)
             plt.imshow(self.images[indices[idx]].reshape(self.image_shape)[slice_num])
-            label = None
-            for name, one_hot in self.label_map.items():
-                if np.array_equal(one_hot, self.labels[indices[idx]]):
-                    label = name
+            label = self.rev_label_map[str(self.labels[indices[idx]])]
+            # for name, one_hot in self.label_map.items():
+            #     if np.array_equal(one_hot, self.labels[indices[idx]]):
+            #         label = name
             img.set_title(label)
             img.axes.get_xaxis().set_visible(False)
             img.axes.get_yaxis().set_visible(False)
         plt.show()
+
+    def inspect(self, idx, slice_cuts=[80, 100, 120, 140, 160, 180, 200]):
+        fig = plt.figure()
+        image = self.images[idx]
+        p_id, p_class = self.participants[idx][0:2]
+        for j, slice_num in enumerate(slice_cuts):
+            img = fig.add_subplot(1, len(slice_cuts), j + 1)
+            plt.imshow(image.reshape(self.image_shape)[slice_num])
+            img.set_title('-'.join([p_class, p_id]))
+            img.axes.get_xaxis().set_visible(False)
+            img.axes.get_yaxis().set_visible(False)
+        plt.show()
+
+    def inspect_all(self):
+        for idx in range(0, self.length):
+            self.inspect(idx)

@@ -1,0 +1,9 @@
+Free T1 sample data
+described in https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4880314/
+taken from https://openfmri.org/dataset/ds000174/
+
+20 cannabis users
+22 controls
+
+two timepoints each, 3 years apart
+3T T1
