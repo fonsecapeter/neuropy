@@ -1,8 +1,7 @@
 import tensorflow as tf
 from sample_data import oasis
 
-# BATCH_SIZE = 50
-BATCH_SIZE = 20
+BATCH_SIZE = 100
 
 # mnist.train.images are the mris flattened from
 # 91 * 109 * 91 = 902629
