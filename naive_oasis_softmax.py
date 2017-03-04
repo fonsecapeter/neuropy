@@ -9,6 +9,7 @@ oasis.load_data()
 graph = tf.Graph()
 with graph.as_default():
     x = tf.placeholder(tf.float32, [None, oasis.flat_image_size])
+    y_ = tf.placeholder(tf.float32, [None, oasis.num_labels])
 
     W = tf.Variable(tf.zeros([oasis.flat_image_size, oasis.num_labels]))
     b = tf.Variable(tf.zeros([oasis.num_labels]))

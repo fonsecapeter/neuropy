@@ -17,30 +17,6 @@ I already added a column to `oasis_cross-sectional.csv` as `participants.tsv` fo
   - `AD` for `CDR` 0.5 (mild), 1 (moderate), or 2 (severe)
 These images come preprocessed from fsl for vbm studies, ie they're already normalized and warped to dartel space. (My fsl flow is below for raw datasets)
 
-`python naive_oasis_softmax.py` batch size: 50
-```
-step 0, training accuracy: 0.75
-step 100, training accuracy: 0.6875
-step 200, training accuracy: 0.875
-step 300, training accuracy: 0.875
-step 400, training accuracy: 0.75
-step 500, training accuracy: 0.625
-step 600, training accuracy: 0.875
-step 700, training accuracy: 0.8125
-step 800, training accuracy: 0.75
-step 900, training accuracy: 0.625
-step 1000, training accuracy: 0.9375
-step 1100, training accuracy: 0.875
-step 1200, training accuracy: 0.75
-step 1300, training accuracy: 0.8125
-step 1400, training accuracy: 0.75
-step 1500, training accuracy: 0.75
-step 1600, training accuracy: 0.5625
-step 1700, training accuracy: 0.8125
-step 1800, training accuracy: 0.875
-step 1900, training accuracy: 0.875
-test accuracy: 0.789474
-```
 `python naive_oasis_softmax.py` batch size: 100
 ```
 step 0, training accuracy: 0.75

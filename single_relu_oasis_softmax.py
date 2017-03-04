@@ -9,8 +9,8 @@ oasis.load_data()
 
 graph = tf.Graph()
 with graph.as_default():
-    x = tf.placeholder(tf.float32, shape=[BATCH_SIZE, oasis.flat_image_size])
-    y_ = tf.placeholder(tf.float32, shape=[BATCH_SIZE, oasis.num_labels])
+    x = tf.placeholder(tf.float32, shape=[None, oasis.flat_image_size])
+    y_ = tf.placeholder(tf.float32, shape=[None, oasis.num_labels])
 
     # -------------------------------------------------------------------------------
     # Single hidden RELU Layer
