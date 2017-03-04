@@ -44,9 +44,11 @@ class TFsMRIDataSet(TFsMRIDataGroup):
         self.data_dir = data_dir
         self.np_dir = np_dir
         self.image_shape = image_shape
+        self.flat_image_size = np.product(image_shape)
         self.pixel_depth = pixel_depth
         self.label_map = label_map
         self.rev_label_map = {str(one_hot): label for label, one_hot in label_map.items()}
+        self.num_labels = len(label_map.keys())
         self.data_multiplier = 1
         self.quiet = False
         self.images = None
