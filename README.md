@@ -2,9 +2,9 @@
 
 Set up environment `virtualenv -p /usr/local/bin/python3.6 venv`
 
-Install dependencies `pip install -r requirements.txt`
-
 Activiate the environment `. venv/bin/activate`
+
+Install dependencies `pip install -r requirements.txt`
 
 Run the (very few) tests `python -m unittest util.test_tf_data.py`
 
