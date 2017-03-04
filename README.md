@@ -1,17 +1,23 @@
-`virtualenv -p /usr/local/bin/python3.6 venv`
-`pip install -r requirements.txt`
-`. venv/bin/activate`
-`python -m unittest util.test_tf_data.py`
+# Random collection of deep learning with MRIs
 
-oases dataset from `nilearn.datasets.featch_oasis_vbm(data_dir='sample_data/oasis')`
-from there the `oasis_cross-sectional.csv` has a group row added according to the dataset (specs)[http://www.oasis-brains.org/pdf/oasis_cross-sectional_facts.pdf]:
+Set up environment `virtualenv -p /usr/local/bin/python3.6 venv`
+
+Install dependencies `pip install -r requirements.txt`
+
+Activiate the environment `. venv/bin/activate`
+
+Run the (very few) tests `python -m unittest util.test_tf_data.py`
+
+Grab oasis dataset from `nilearn.datasets.fetch_oasis_vbm(data_dir='sample_data/oasis')`
+
+Move the contents of `sample_data/oasis/oasis1` into `sample_data/oasis`
+
+I already added a column to `oasis_cross-sectional.csv` as `participants.tsv` for groups according to the [specs](http://www.oasis-brains.org/pdf/oasis_cross-sectional_facts.pdf):
   - `HC` for `CDR` nonexistent or 0
   - `AD` for `CDR` 0.5 (mild), 1 (moderate), or 2 (severe)
+These images come preprocessed from fsl for vbm studies, ie they're already normalized and warped to dartel space. (My fsl flow is below for raw datasets)
 
-data are preprocessed w:ith fsl for vbm to dartel space
-
-`python naive_oasis_softmax.py`
-batch size: 50
+`python naive_oasis_softmax.py` batch size: 50
 ```
 step 0, training accuracy: 0.75
 step 100, training accuracy: 0.6875
@@ -35,7 +41,7 @@ step 1800, training accuracy: 0.875
 step 1900, training accuracy: 0.875
 test accuracy: 0.789474
 ```
-batch size: 100
+`python naive_oasis_softmax.py` batch size: 100
 ```
 step 0, training accuracy: 0.75
 step 100, training accuracy: 0.7
@@ -59,23 +65,17 @@ step 1800, training accuracy: 0.71
 step 1900, training accuracy: 0.76
 test accuracy: 0.842105
 ```
-pretty bad but better than 50/50
-cnn with the right setup could do better
+Pretty bad but better than raw MRIs in smaller, less separated groups.
 
+Deep cnn with the right setup could probably do better, especially with the more recent 3d support. Currently need more of either: computing power, performance design, or patience...
 
-FSL preprocessing plan as used in (Sarraf et al)[http://biorxiv.org/content/biorxiv/early/2016/08/30/070441.full.pdf] (write script to do it)
-  - extract brain using (fsl)[https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BET/UserGuide] `bet`
-  - generate study-specific gm template
-    - segment brains to gm/wm/csf
-    - register gm to icbm-152 space
-    - create affine gm template from registered gm images
-  - register gm images to new template to generate final study-specific template in standard space
-  - bring images into study space
+Insired by [Sarraf et al](http://biorxiv.org/content/biorxiv/early/2016/08/30/070441.full.pdf)
 
-just follow (the fsl-vbm guide)[https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLVBM/UserGuide] (do evertything in python2 environment)
+## FSL Flow
+Just follow [the fsl-vbm guide](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLVBM/UserGuide) (do evertything in python2 environment):
   - make a `sample_data/<data-set>/fsl` dir
   - move all images into that dir
-  - balance groups and note one filename each in `fsl/template_list`
+  - balance groups so that there are equal n each and note one filename each in `fsl/template_list`
     - prepend file names with class str (ex `CB-*.nii.gz` and `HC-*.nii.gz`)
   - create design.mat and design.con
     - start with design.txt (one col per class, one row per sub, in order of files (alphabetical by group then id))
