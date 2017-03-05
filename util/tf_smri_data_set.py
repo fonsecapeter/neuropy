@@ -5,35 +5,11 @@ import numpy as np
 import os
 import random
 
+from .subject import Subject
+from .tf_smri_data_group import TFsMRIDataGroup
 from util.progress import print_progress
 
 t1_not_found_message = '  !!! %s T1 not found, skipping !!!'
-
-
-class TFsMRIDataGroup(object):
-    """Links images and labels"""
-
-    def __init__(self, images, labels):
-        self.images = images
-        self.labels = labels
-        self.slide = 0
-
-    @property
-    def length(self):
-        return len(self.labels)
-
-    @property
-    def shape(self):
-        return (self.images.shape, self.labels.shape)
-
-    def next_batch(self, batch_size):
-        """Gets next batch of random labelled data
-
-        Returns:
-            Tuple(images, labels)
-        """
-        idx = np.random.randint(0, self.length, size=batch_size)
-        return self.images[idx, :], self.labels[idx, :]
 
 
 class TFsMRIDataSet(TFsMRIDataGroup):
@@ -54,6 +30,7 @@ class TFsMRIDataSet(TFsMRIDataGroup):
         self.images = None
         self.labels = None
         self.participants = None
+        self.subjects = []
 
     def quiet_or_print(self, statement):
         if not self.quiet:
@@ -106,17 +83,20 @@ class TFsMRIDataSet(TFsMRIDataGroup):
             total = len(self.participants) - 1
             for idx, participant in enumerate(self.participants):
                 try:
-                    p_id = participant[0]
-                    p_class = participant[1]
+                    sub = Subject(participant[0], participant[0])
+                    sub.p_id = participant[0]
+                    sub.group = participant[1]
                     for _ in range(self.data_multiplier):
-                        img = self.load_or_save_image(p_id, p_class)
+                        img = self.load_or_save_image(sub.p_id, sub.group)
                         if img is not None:
                             images.append(img)
-                            labels.append(self.label_map[p_class])
+                            labels.append(self.label_map[sub.group])
+                            sub.image = img
+                            self.subjects.append(sub)
                     if not self.quiet:
                         print_progress(idx, total, prefix='loading images:', length=40)
                 except FileNotFoundError:
-                    self.quiet_or_print(t1_not_found_message % p_id)
+                    self.quiet_or_print(t1_not_found_message % sub.p_id)
             self.quiet_or_print('building image set...')
             self.images = np.asarray(images)
             # np.save('%s/images_%sx' % (self.np_dir, self.data_multiplier), self.images)
