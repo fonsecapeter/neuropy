@@ -1,3 +1,4 @@
+"""DEPRECATED PLZ USE TFsMRISubGroup"""
 import numpy as np
 
 
@@ -8,7 +9,7 @@ class TFsMRIDataGroup(object):
         self.images = images
         self.labels = labels
         self.subjects = subjects
-        self.description = None
+        self.dscrptn = None
 
     @property
     def length(self):
@@ -19,17 +20,17 @@ class TFsMRIDataGroup(object):
         return (self.images.shape, self.labels.shape)
 
     @property
-    def describe(self):
-        if self.description:
-            return self.description
+    def description(self):
+        if self.dscrptn:
+            return self.dscrptn
         else:
-            self.description = {}
+            self.dscrptn = {}
             occurances = {}
             for sub in self.subjects:
                 occurances.setdefault(sub.group, []).append(1)
             for group, occurances in occurances.items():
-                self.description[group] = len(occurances)
-            return self.description
+                self.dscrptn[group] = len(occurances)
+            return self.dscrptn
 
 
     def next_batch(self, batch_size):
