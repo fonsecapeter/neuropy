@@ -1,5 +1,5 @@
 import numpy as np
-from util.tf_data import TFsMRIDataSet
+from util.tf_smri_data_set import TFsMRIDataSet
 
 cannabis = TFsMRIDataSet(
     'sample_data/cannabis/sorted_participants.tsv',

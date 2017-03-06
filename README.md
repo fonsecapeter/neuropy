@@ -19,31 +19,55 @@ These images come preprocessed from fsl for vbm studies, ie they're already norm
 
 `python naive_oasis_softmax.py` batch size: 100
 ```
-step 0, training accuracy: 0.75
-step 100, training accuracy: 0.7
-step 200, training accuracy: 0.72
-step 300, training accuracy: 0.67
-step 400, training accuracy: 0.57
-step 500, training accuracy: 0.65
-step 600, training accuracy: 0.78
-step 700, training accuracy: 0.73
-step 800, training accuracy: 0.74
-step 900, training accuracy: 0.73
-step 1000, training accuracy: 0.79
-step 1100, training accuracy: 0.73
-step 1200, training accuracy: 0.82
-step 1300, training accuracy: 0.71
-step 1400, training accuracy: 0.76
-step 1500, training accuracy: 0.75
-step 1600, training accuracy: 0.8
-step 1700, training accuracy: 0.68
-step 1800, training accuracy: 0.71
-step 1900, training accuracy: 0.76
-test accuracy: 0.842105
+step 0, training accuracy: 0.72
+step 100, training accuracy: 0.76
+step 200, training accuracy: 0.71
+step 300, training accuracy: 0.78
+step 400, training accuracy: 0.76
+step 500, training accuracy: 0.78
+step 600, training accuracy: 0.75
+step 700, training accuracy: 0.72
+step 800, training accuracy: 0.79
+step 900, training accuracy: 0.79
+step 1000, training accuracy: 0.71
+step 1100, training accuracy: 0.79
+step 1200, training accuracy: 0.78
+step 1300, training accuracy: 0.72
+step 1400, training accuracy: 0.85
+step 1500, training accuracy: 0.74
+step 1600, training accuracy: 0.71
+step 1700, training accuracy: 0.73
+step 1800, training accuracy: 0.76
+step 1900, training accuracy: 0.68
+test accuracy: 0.741935
 ```
 Pretty bad but better than raw MRIs in smaller, less separated groups.
 
-Deep cnn with the right setup could probably do better, especially with the more recent 3d support. Currently need more of either: computing power, performance design, or patience...
+Lets try adding a single hidden RELU layer
+`python single_relu_oasis_sosftmax.py` batch size: 100, h_size: 64
+```
+step 0, training accuracy: 0.24
+step 100, training accuracy: 0.73
+step 200, training accuracy: 0.72
+step 300, training accuracy: 0.72
+step 400, training accuracy: 0.78
+step 500, training accuracy: 0.73
+step 600, training accuracy: 0.71
+step 700, training accuracy: 0.76
+step 800, training accuracy: 0.71
+step 900, training accuracy: 0.77
+step 1000, training accuracy: 0.78
+step 1100, training accuracy: 0.84
+step 1200, training accuracy: 0.81
+step 1300, training accuracy: 0.58
+step 1400, training accuracy: 0.78
+step 1500, training accuracy: 0.76
+step 1600, training accuracy: 0.78
+step 1700, training accuracy: 0.72
+step 1800, training accuracy: 0.73
+step 1900, training accuracy: 0.77
+test accuracy: 0.854839
+```
 
 Insired by [Sarraf et al](http://biorxiv.org/content/biorxiv/early/2016/08/30/070441.full.pdf)
 
