@@ -6,7 +6,7 @@ import time
 from sample_data import oasis
 
 BATCH_SIZE = 16
-NUM_TRAINS = 1
+NUM_TRAINS = 200
 PATCH_SIZE = 5
 DEPTH = 16
 H_SIZE = 64
@@ -20,7 +20,7 @@ with graph.as_default():
     y_ = tf.placeholder(tf.float32, shape=[None, oasis.num_labels])
 
     # -------------------------------------------------------------------------------
-    # Layer 1 
+    # Layer 1
     W_1 = tf.Variable(tf.truncated_normal([PATCH_SIZE, PATCH_SIZE, PATCH_SIZE, 1, DEPTH], stddev=0.1))
     b_1 = tf.Variable(tf.zeros([DEPTH]))
     conv = tf.nn.conv3d(x, W_1, [1, 2, 2, 2, 1], padding='SAME')
@@ -28,7 +28,7 @@ with graph.as_default():
     pool = tf.nn.max_pool3d(hidden, [1, 2, 2, 2, 1], [1, 2, 2, 2, 1], padding='SAME')
 
     # -------------------------------------------------------------------------------
-    # Layer 2 
+    # Layer 2
     W_2 = tf.Variable(tf.truncated_normal([PATCH_SIZE, PATCH_SIZE, PATCH_SIZE, DEPTH, DEPTH], stddev=0.1))
     b_2 = tf.Variable(tf.constant(1.0, shape=[DEPTH]))
     conv = tf.nn.conv3d(pool, W_2, [1, 1, 1, 1, 1], padding='SAME')
@@ -69,14 +69,13 @@ with tf.Session(graph=graph) as sess:
     print('initializing graph...')
     tf.global_variables_initializer().run()
     for i in range(NUM_TRAINS):
-        start = time.time()
         batch_xs, batch_ys = oasis.train.next_batch(BATCH_SIZE)
         batch_xs = batch_xs.reshape(-1, *oasis.image_shape, 1)
-        # if i % 100 == 0:
-        train_accuracy = accuracy.eval(feed_dict={
-            x: batch_xs, y_: batch_ys
-        })
-        print('step %d, training accuracy: %g in %.2fs' % (i, train_accuracy, time.time() - start))
+        if i % 100 == 0:
+            train_accuracy = accuracy.eval(feed_dict={
+                x: batch_xs, y_: batch_ys
+            })
+            print('step %d, training accuracy: %g' % (i, train_accuracy))
         sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
     # -------------------------------------------------------------------------------

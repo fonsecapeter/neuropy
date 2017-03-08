@@ -23,7 +23,8 @@ oasis = TFsMRIDataSet(
     'sample_data/oasis/participants.tsv',
     'sample_data/oasis/%s/mwrc1%s_mpr_anon_fslswapdim_bet.nii.gz',
     'sample_data/oasis/.numpies',
-    (91, 109, 91),
+    # (91, 109, 91),
+    (46, 55, 46), # downsample 4x
     {'HC': np.asarray([1, 0]), 'AD': np.asarray([0, 1])}
 )
 

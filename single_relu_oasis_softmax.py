@@ -2,7 +2,7 @@ import tensorflow as tf
 from sample_data import oasis
 
 BATCH_SIZE = 100
-NUM_TRAINS = 2000
+NUM_TRAINS = 4000
 H_SIZE = 64
 
 oasis.load_data()

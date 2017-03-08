@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import nibabel as nib
+import nilearn.image
 import numpy as np
 import os
 
@@ -48,7 +49,10 @@ class Subject(object):
                 except FileNotFoundError:
                     print(t1_not_found_message % self.p_id)
                     return None
-            img_data = img_file.get_data()
+            # downsample from 1mm x 1mm -> 4mm x 4mm voxel size
+            affine = np.diag((4, 4, 4))
+            downsampled_img_file = nilearn.image.resample_img(img_file, target_affine=affine)
+            img_data = downsampled_img_file.get_data()
             if img_data.shape != self.image_shape:
                 return None
             img = img_data.flatten()
