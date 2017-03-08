@@ -31,7 +31,7 @@ with graph.as_default():
     correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-with tf.Session(graph=graph) as sess:
+with tf.Session(graph=graph, config=tf.ConfigProto(log_device_placement=True)) as sess:
     tf.global_variables_initializer().run()
     for i in range(NUM_TRAINS):
         batch_xs, batch_ys = oasis.train.next_batch(BATCH_SIZE)
