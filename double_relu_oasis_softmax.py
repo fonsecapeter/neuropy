@@ -13,10 +13,16 @@ with graph.as_default():
     y_ = tf.placeholder(tf.float32, shape=[None, oasis.num_labels])
 
     # -------------------------------------------------------------------------------
-    # Single hidden RELU Layer
-    W_h = tf.Variable(tf.truncated_normal([oasis.flat_image_size, H_SIZE]))
-    b_h = tf.Variable(tf.zeros([H_SIZE]))
-    relu_h = tf.nn.relu(tf.matmul(x, W_h) + b_h)
+    # First hidden RELU Layer
+    W_h1 = tf.Variable(tf.truncated_normal([oasis.flat_image_size, H_SIZE]))
+    b_h1 = tf.Variable(tf.zeros([H_SIZE]))
+    relu = tf.nn.relu(tf.matmul(x, W_h1) + b_h1)
+
+    # -------------------------------------------------------------------------------
+    # First hidden RELU Layer
+    W_h2 = tf.Variable(tf.truncated_normal([H_SIZE, H_SIZE]))
+    b_h2 = tf.Variable(tf.zeros([H_SIZE]))
+    relu = tf.nn.relu(tf.matmul(relu, W_h2) + b_h2)
 
     # -------------------------------------------------------------------------------
     # Output Layer
@@ -25,7 +31,7 @@ with graph.as_default():
 
     # -------------------------------------------------------------------------------
     # Train
-    logits = tf.matmul(relu_h, W_o) + b_o
+    logits = tf.matmul(relu, W_o) + b_o
     y = tf.nn.softmax(logits)
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=logits))
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
