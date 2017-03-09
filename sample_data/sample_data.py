@@ -4,7 +4,7 @@ from util.tf_smri_data_set import TFsMRIDataSet
 cannabis = TFsMRIDataSet(
     'sample_data/cannabis/sorted_participants.tsv',
     # 'sample_data/cannabis/sub-%s/ses-FU/anat/sub-%s_ses-FU_T1w.nii.gz',
-    'sample_data/cannabis/fsl/struc/%s-sub-%s_ses-FU_T1w_struc_GM.nii.gz',  # % (class_label, p_id)
+    'sample_data/cannabis/fsl/struc/%s-sub-%s_ses-FU_T1w_struc_GM.nii.gz',  # % (group, p_id)
     'sample_data/cannabis/.numpies',
     (256, 256, 170),
     {'HC': np.asarray([1, 0]), 'CB': np.asarray([0, 1])}
@@ -24,7 +24,17 @@ oasis = TFsMRIDataSet(
     'sample_data/oasis/%s/mwrc1%s_mpr_anon_fslswapdim_bet.nii.gz',
     'sample_data/oasis/.numpies',
     # (91, 109, 91),
-    (46, 55, 46), # downsample 4x
-    {'HC': np.asarray([1, 0]), 'AD': np.asarray([0, 1])}
+    (46, 55, 46),  # downsample 4x
+    {'HC': np.asarray([1, 0]), 'AD': np.asarray([0, 1])},
+    downsample=4
 )
 
+pf2015 = TFsMRIDataSet(
+    'sample_data/pf2015/participants.tsv',
+    # 'sample_data/pf2015/%s/%s_t1.nii',
+    'sample_data/pf2015/fsl/struc/%s-%s_t1_struc_GM.nii.gz',  # % (group, p_id)
+    'sample_data/pf2015/.numpies',
+    (240, 256, 160),
+    # (47, 78, 81),  # if downsample 4x
+    {'PF': np.asarray([1])}
+)

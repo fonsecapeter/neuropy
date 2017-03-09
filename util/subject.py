@@ -8,7 +8,7 @@ t1_not_found_message = '  !!! %s T1 not found, skipping !!!'
 
 
 class Subject(object):
-    def __init__(self, p_id, group, data_dir, np_dir, image_shape, label_map):
+    def __init__(self, p_id, group, data_dir, np_dir, image_shape, label_map, downsample=None):
         self.p_id = p_id
         self.group = group
         self.data_dir = data_dir
@@ -18,6 +18,7 @@ class Subject(object):
         self.label_map = label_map
         self.rev_label_map = {str(one_hot): label for label, one_hot in label_map.items()}
         self.label = label_map[group]
+        self.downsample = downsample
         self.img = None
 
     @property
@@ -50,9 +51,10 @@ class Subject(object):
                     print(t1_not_found_message % self.p_id)
                     return None
             # downsample from 1mm x 1mm -> 4mm x 4mm voxel size
-            affine = np.diag((4, 4, 4))
-            downsampled_img_file = nilearn.image.resample_img(img_file, target_affine=affine)
-            img_data = downsampled_img_file.get_data()
+            if self.downsample:
+                affine = np.diag((4, 4, 4))
+                img_file = nilearn.image.resample_img(img_file, target_affine=affine)
+            img_data = img_file.get_data()
             if img_data.shape != self.image_shape:
                 return None
             img = img_data.flatten()

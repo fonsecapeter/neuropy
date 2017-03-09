@@ -1,8 +1,6 @@
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import nibabel as nib
 import numpy as np
-import os
 import random
 
 from .subject import Subject
@@ -21,7 +19,7 @@ class TFsMRIDataSet(object):
         2.) now valid subjects are loaded into memory and split into #train, #test, and #validation
     """
 
-    def __init__(self, parts_dir, data_dir, np_dir, image_shape, label_map):
+    def __init__(self, parts_dir, data_dir, np_dir, image_shape, label_map, downsample=None):
         self.parts_dir = parts_dir
         self.data_dir = data_dir
         self.np_dir = np_dir
@@ -29,6 +27,7 @@ class TFsMRIDataSet(object):
         self.flat_image_size = np.product(image_shape)
         self.label_map = label_map
         self.num_labels = len(label_map.keys())
+        self.downsample = downsample
         self.quiet = False
         self.images = None
         self.labels = None
@@ -40,7 +39,11 @@ class TFsMRIDataSet(object):
 
     @property
     def description(self):
-        return {'train': self.train.description, 'test': self.test.description, 'validation': self.validation.description}
+        return {
+            'train': self.train.description,
+            'test': self.test.description,
+            'validation': self.validation.description
+        }
 
     def quiet_or_print(self, statement):
         """Log to console if not in quiet mode"""
@@ -74,10 +77,14 @@ class TFsMRIDataSet(object):
         """
         self.subjects = []
         self.quiet = quiet
-        study_participants = np.genfromtxt(self.parts_dir, dtype=str, usecols=(0, 1), skip_header=1)
+        study_participants = np.genfromtxt(self.parts_dir, dtype=str, usecols=(0, 1), skip_header=1, delimiter='\t')
         total = len(study_participants) - 1
         for idx, participant in enumerate(study_participants):
-            sub = Subject(participant[0], participant[1], self.data_dir, self.np_dir, self.image_shape, self.label_map)
+            sub = Subject(
+                participant[0], participant[1],
+                self.data_dir, self.np_dir,
+                self.image_shape, self.label_map, self.downsample
+            )
             if sub.image is not None:
                 self.subjects.append(sub)
                 if not self.quiet:
