@@ -9,6 +9,7 @@ class TFsMRISubGroup(object):
         self.lazy_images = None
         self.lazy_labels = None
         self.lazy_description = None
+        self.slide = 0
 
     @property
     def shape(self):
@@ -47,7 +48,30 @@ class TFsMRISubGroup(object):
                 self.lazy_description[group] = len(occurances)
             return self.lazy_description
 
+    def shuffle(self):
+        np.random.shuffle(self.subjects)
+
     def next_batch(self, batch_size):
+        """Gets the next batch of labelled data
+
+        Notes:
+            Should be used with evenly divisible batch_size and epochs,
+            but will just truncate last batch if uneven
+        Returns:
+            Tuple(images, labels)
+        """
+        if self.slide + batch_size >= self.length:
+            subs = self.subjects[self.slide:]
+            self.slide = 0
+        else:
+            batch_end = self.slide + batch_size
+            subs = self.subjects[self.slide:batch_end]
+            self.slide = batch_end
+        images = np.asarray([sub.image for sub in subs])
+        labels = np.asarray([sub.label for sub in subs])
+        return images, labels
+
+    def random_batch(self, batch_size):
         """Gets next batch of random labelled data
 
         Returns:

@@ -32,7 +32,6 @@ class TFsMRIDataGroup(object):
                 self.dscrptn[group] = len(occurances)
             return self.dscrptn
 
-
     def next_batch(self, batch_size):
         """Gets next batch of random labelled data
 
