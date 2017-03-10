@@ -2,13 +2,17 @@ import numpy as np
 import math
 import tensorflow as tf
 from sample_data import oasis
+from util.progress import print_progress
 
-LEARNING_RATE = 0.00001
+LEARNING_RATE = 0.0000001
+MOMENTUM = 0.8
+
 BATCH_SIZE = 50
 NUM_EPOCHS = 800
-KEEP_PROB = 0.5
+
 H_SIZE = 64
 REG_BETA = 0.0005
+KEEP_PROB = 0.5
 
 oasis.load_data()
 
@@ -21,7 +25,6 @@ graph = tf.Graph()
 with graph.as_default():
     x = tf.placeholder(tf.float32, shape=[None, oasis.flat_image_size])
     y_ = tf.placeholder(tf.float32, shape=[None, oasis.num_labels])
-
     # -------------------------------------------------------------------------------
     # First hidden RELU Layer
     W_h1 = tf.Variable(tf.truncated_normal([oasis.flat_image_size, H_SIZE]))
@@ -40,7 +43,6 @@ with graph.as_default():
         relu = tf.nn.relu(tf.matmul(relu, W_h2) + b_h2)
         relu = tf.nn.dropout(relu, KEEP_PROB)
         return tf.matmul(relu, W_o) + b_o
-
     # -------------------------------------------------------------------------------
     # Train
     logits = model(x, train=True)
@@ -52,7 +54,8 @@ with graph.as_default():
     )
     loss = loss + (REG_BETA * regularizers)
 
-    optimizer = tf.train.MomentumOptimizer(learning_rate=LEARNING_RATE, momentum=0.5).minimize(loss)
+    optimizer = tf.train.MomentumOptimizer(learning_rate=LEARNING_RATE, momentum=MOMENTUM).minimize(loss)
+    # optimizer = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE).minimize(loss)
 
     # -------------------------------------------------------------------------------
     # Predictions for training, validation, and test
@@ -67,15 +70,21 @@ with tf.Session(graph=graph) as sess:
         steps_per_epoch = math.ceil(oasis.train.length / BATCH_SIZE)
         for step in range(steps_per_epoch):
             batch_xs, batch_ys = oasis.train.next_batch(BATCH_SIZE)
-            _, l, predictions = sess.run([optimizer, loss, train_prediction], feed_dict={x: batch_xs, y_: batch_ys})
-        if epoch % 10 == 0:
-            oasis.validation.shuffle()
-            print('epoch %d -----------------------------' % epoch)
-            print('  minibatch loss: %.4f' % l)
-            print('  minibatch accuracy: %.2f%%' % accuracy(predictions, batch_ys))
-            print('  validation accuracy: %.2f%%' % accuracy(valid_prediction.eval(), oasis.validation.labels))
+            _, l, predictions = sess.run(
+                [optimizer, loss, train_prediction],
+                feed_dict={x: batch_xs, y_: batch_ys}
+            )
+            if epoch % 20 == 0:
+                print_progress(
+                    step, steps_per_epoch - 1, prefix='epoch %3d' % epoch, length=40,
+                    fill='-', blank=' ', left_cap='', right_cap='', show_percent=False
+                )
+                if step >= steps_per_epoch - 1:
+                    print('  minibatch loss: %.4f' % l)
+                    print('  minibatch accuracy: %.2f%%' % accuracy(predictions, batch_ys))
+                    print('  validation accuracy: %.2f%%' % accuracy(valid_prediction.eval(), oasis.validation.labels))
 
     # -------------------------------------------------------------------------------
     # Display Validation Accuracy
-    print('===============================')
+    print('===========================================')
     print('Test accuracy: %.2f%%' % accuracy(test_prediction.eval(), oasis.test.labels))

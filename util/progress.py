@@ -1,5 +1,8 @@
+
+
 # Print iterations progress
-def print_progress(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█'):
+def print_progress(iteration, total, prefix='', suffix='', decimals=1, length=100,
+                   fill='█', blank='-', left_cap='|', right_cap='|', show_percent=True):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -13,8 +16,12 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=1, length=10
     """
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end='\r')
+    bar = fill * filledLength + blank * (length - filledLength)
+    if show_percent:
+        print('\r%s %s%s%s %s%% %s' % (prefix, left_cap, bar, right_cap, percent, suffix), end='\r')
+    else:
+        print('\r%s %s%s%s' % (prefix, left_cap, bar, right_cap), end='\r')
+
     # Print New Line on Complete
     if iteration >= total:
         print()

@@ -20,7 +20,7 @@ ucla = TFsMRIDataSet(
 )
 
 oasis = TFsMRIDataSet(
-    'sample_data/oasis/participants.tsv',
+    'sample_data/oasis/participants_no_mr2.tsv',
     'sample_data/oasis/%s/mwrc1%s_mpr_anon_fslswapdim_bet.nii.gz',
     'sample_data/oasis/.numpies',
     # (91, 109, 91),

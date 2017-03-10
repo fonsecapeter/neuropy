@@ -88,7 +88,7 @@ class TFsMRIDataSet(object):
             if sub.image is not None:
                 self.subjects.append(sub)
                 if not self.quiet:
-                    print_progress(idx, total, prefix='loading subjects:', length=40)
+                    print_progress(idx, total, prefix='loading subjects:', length=40, left_cap='', right_cap='')
         self.split_subs()
 
     def visualize(self, count, slice_num):
