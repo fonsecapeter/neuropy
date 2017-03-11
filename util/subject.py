@@ -41,13 +41,13 @@ class Subject(object):
             os.makedirs(self.np_dir)
         try:
             img = np.load('%s/%s.npy' % (self.np_dir, self.p_id))
-        except FileNotFoundError:
+        except IOError:
             try:
                 img_file = nib.load(self.data_dir % (self.p_id, self.p_id))
-            except FileNotFoundError:
+            except IOError:
                 try:
                     img_file = nib.load(self.data_dir % (self.group, self.p_id))
-                except FileNotFoundError:
+                except IOError:
                     print(t1_not_found_message % self.p_id)
                     return None
             # downsample from 1mm x 1mm -> 4mm x 4mm voxel size

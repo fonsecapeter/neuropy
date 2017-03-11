@@ -15,7 +15,7 @@ class TFsMRISubGroup(object):
     def shape(self):
         img_shape = self.subjects[0].flat_image_size
         lbl_shape = self.subjects[0].label.shape
-        return ((self.length, img_shape), (self.length, *lbl_shape))
+        return ((self.length, img_shape), (self.length, lbl_shape))
 
     @property
     def images(self):

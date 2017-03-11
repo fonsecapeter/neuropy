@@ -19,7 +19,7 @@ REG_BETA = 0.0005
 KEEP_PROB = 0.5
 
 oasis.load_data()
-
+shape = oasis.image_shape
 
 def accuracy(predictions, labels):
     return (100.0 * np.sum(np.argmax(predictions, 1) == np.argmax(labels, 1)) / predictions.shape[0])
@@ -27,7 +27,7 @@ def accuracy(predictions, labels):
 
 graph = tf.Graph()
 with graph.as_default():
-    x = tf.placeholder(tf.float32, shape=[None, *oasis.image_shape, 1])
+    x = tf.placeholder(tf.float32, shape=[None, shapep[0], shape[1], shape[2],  1])
     y_ = tf.placeholder(tf.float32, shape=[None, oasis.num_labels])
     # -------------------------------------------------------------------------------
     # First Convolutional Layer
@@ -99,7 +99,7 @@ with tf.Session(graph=graph) as sess:
             batch_xs, batch_ys = oasis.train.next_batch(BATCH_SIZE)
             _, l, predictions = sess.run(
                 [optimizer, loss, train_prediction],
-                feed_dict={x: batch_xs.reshape(-1, *oasis.image_shape, 1), y_: batch_ys}
+                feed_dict={x: batch_xs.reshape(-1, shape[0], shape[1], shape[2], 1), y_: batch_ys}
             )
             print_progress(
                 step, steps_per_epoch - 1, prefix='epoch %3d' % epoch, length=40,
@@ -111,7 +111,7 @@ with tf.Session(graph=graph) as sess:
                 print('  minibatch accuracy: %.2f%%' % accuracy(predictions, batch_ys))
                 print('  validation accuracy: %.2f%%' % accuracy(sess.run(
                     test_prediction,
-                    {x: oasis.validation.images.reshape(-1, *oasis.image_shape, 1), y_: oasis.validation.labels}
+                    {x: oasis.validation.images.reshape(-1, shape[0], shape[1], shape[2], 1), y_: oasis.validation.labels}
                 ), oasis.validation.labels))
 
     # -------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ with tf.Session(graph=graph) as sess:
     print('===========================================')
     print('Test accuracy: %.2f%%' % accuracy(sess.run(
         test_prediction,
-        {x: oasis.test.images.reshape(-1, *oasis.image_shape, 1), y_: oasis.test.labels}
+        {x: oasis.test.images.reshape(-1, shape[0], shape[1], shape[2], 1), y_: oasis.test.labels}
     ), oasis.test.labels))
 
 # batch_size: 4...

@@ -1,4 +1,5 @@
-
+# -*- coding: utf-8 -*-
+from __future__ import print_function
 
 # Print iterations progress
 def print_progress(iteration, total, prefix='', suffix='', decimals=1, length=100,
