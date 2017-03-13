@@ -7,8 +7,8 @@ from util.progress import print_progress
 LEARNING_RATE = 0.000001
 MOMENTUM = 0.3
 
-BATCH_SIZE = 16
-NUM_EPOCHS = 2
+BATCH_SIZE = 50
+NUM_EPOCHS = 200
 
 PATCH_SIZE = math.ceil(oasis.image_shape[0] * 0.1)
 STRIDE_SIZE = math.ceil(oasis.image_shape[0] * 0.1)
@@ -27,11 +27,11 @@ def accuracy(predictions, labels):
 
 graph = tf.Graph()
 with graph.as_default():
-    x = tf.placeholder(tf.float32, shape=[None, shapep[0], shape[1], shape[2],  1])
+    x = tf.placeholder(tf.float32, shape=[None, shape[0], shape[1], shape[2],  1])
     y_ = tf.placeholder(tf.float32, shape=[None, oasis.num_labels])
     # -------------------------------------------------------------------------------
     # First Convolutional Layer
-    W_1 = tf.Variable(tf.truncated_normal([PATCH_SIZE, PATCH_SIZE, PATCH_SIZE, 1, DEPTH], stddev=0.1))
+    W_1 = tf.Variable(tf.truncated_normal(np.asarray([PATCH_SIZE, PATCH_SIZE, PATCH_SIZE, 1, DEPTH], dtype='int64'), stddev=0.1))
     b_1 = tf.Variable(tf.zeros([DEPTH]))
     # -------------------------------------------------------------------------------
     # Second Convolutional Layer
@@ -95,18 +95,17 @@ with tf.Session(graph=graph) as sess:
     tf.global_variables_initializer().run()
     for epoch in range(NUM_EPOCHS):
         steps_per_epoch = math.ceil(oasis.train.length / BATCH_SIZE)
-        for step in range(steps_per_epoch):
+        for step in range(int(steps_per_epoch)):
             batch_xs, batch_ys = oasis.train.next_batch(BATCH_SIZE)
             _, l, predictions = sess.run(
                 [optimizer, loss, train_prediction],
                 feed_dict={x: batch_xs.reshape(-1, shape[0], shape[1], shape[2], 1), y_: batch_ys}
             )
-            print_progress(
-                step, steps_per_epoch - 1, prefix='epoch %3d' % epoch, length=40,
-                fill='-', blank=' ', left_cap='', right_cap=''
-            )
-            if step >= steps_per_epoch - 1:
-                print('')
+            if step >= steps_per_epoch - 1 and epoch % 20 == 0:
+                print_progress(
+                    step, steps_per_epoch - 1, prefix='epoch %3d' % epoch, length=40,
+                    fill='-', blank=' ', left_cap='', right_cap=''
+                )
                 print('  minibatch loss: %.4f' % l)
                 print('  minibatch accuracy: %.2f%%' % accuracy(predictions, batch_ys))
                 print('  validation accuracy: %.2f%%' % accuracy(sess.run(
