@@ -87,3 +87,6 @@ Just follow [the fsl-vbm guide](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLVBM/Us
     - check in fslview as per directions from script output
   - final processing, run `fslvbm_3_proc`
 
+## UCLA Dataset
+
+Download from [openfmri](https://openneuro.org/datasets/ds000030) and save in `sample_data/ucla/`
